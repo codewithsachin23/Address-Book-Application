@@ -1,8 +1,9 @@
 package com.bridgelab.addressbookapp.controllers;
 
 
+import com.bridgelab.addressbookapp.DTO.AddressBookDTO;
 import com.bridgelab.addressbookapp.model.AddressBookDetails;
-import com.bridgelab.addressbookapp.repository.AddressBookRepository;
+import com.bridgelab.addressbookapp.service.AddressBookServiceLayer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,19 +15,20 @@ import java.util.Optional;
 @RequestMapping("/addressBookApp")
 public class AddressBookAppControllers {
     @Autowired
-    AddressBookRepository addressBookRepository;
+    AddressBookServiceLayer addressBookServiceLayer;
     @GetMapping
     public ResponseEntity<List<AddressBookDetails>> get(){
-        return ResponseEntity.ok(addressBookRepository.findAll());
+        return ResponseEntity.ok(addressBookServiceLayer.get());
     }
     @PostMapping
-    public String Create(@RequestBody AddressBookDetails addressBookDetails){
-        addressBookRepository.save(addressBookDetails);
-        return "Done";
+    public String Create(@RequestBody AddressBookDTO addressBookDTO){
+       return addressBookServiceLayer.create(addressBookDTO);
+
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Optional<AddressBookDetails>> getByID(@PathVariable int id){
-        Optional<AddressBookDetails> book=addressBookRepository.findById(id);
+        Optional<AddressBookDetails> book=addressBookServiceLayer.findById(id);
         if (book.isPresent()){
             return ResponseEntity.ok(book);
         }else {
@@ -35,20 +37,13 @@ public class AddressBookAppControllers {
     }
 
     @PutMapping("/{id}")
-    public String Update(@RequestBody AddressBookDetails newAddress,@PathVariable int id){
-        Optional<AddressBookDetails> details=addressBookRepository.findById(id);
-        if (details.isPresent()){
-            AddressBookDetails addressBookDetails=details.get();
-            addressBookDetails.setName(newAddress.getName());
-            addressBookDetails.setDepartment(newAddress.getDepartment());
-            addressBookRepository.save(addressBookDetails);
-        }
-        return "update done";
+    public String Update(@RequestBody AddressBookDTO newAddress,@PathVariable int id){
+       return addressBookServiceLayer.update(newAddress,id);
     }
+
     @DeleteMapping("/{id}")
     public String deleteByID(@PathVariable int id){
-        addressBookRepository.deleteById(id);
-        return " record Deleted";
+        return addressBookServiceLayer.deleteBuyID(id);
     }
 
 
