@@ -1,33 +1,18 @@
 package com.bridgelab.addressbookapp.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class AddressBookDTO {
-
     private String name;
-    private String department;
-
-
-    public AddressBookDTO() {
-    }
-
-    public AddressBookDTO(String name, String department) {
-        this.name = name;
-        this.department = department;
-    }
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-
+    private String address;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String phoneNumber ;
 }

@@ -9,20 +9,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/addressBookApp")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AddressBookAppControllers {
     @Autowired
     AddressBookServiceLayer addressBookServiceLayer;
-    @GetMapping
+    @GetMapping("/viewPerson")
     public ResponseEntity<List<AddressBookDetails>> get(){
         return ResponseEntity.ok(addressBookServiceLayer.get());
     }
-    @PostMapping
-    public String Create(@RequestBody AddressBookDTO addressBookDTO){
-       return addressBookServiceLayer.create(addressBookDTO);
+    @PostMapping("/create")
+    public ResponseEntity<Map<String, Object>> Create(@RequestBody AddressBookDTO addressBookDTO){
+       return ResponseEntity.ok(addressBookServiceLayer.create(addressBookDTO));
 
     }
 
@@ -36,14 +38,14 @@ public class AddressBookAppControllers {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public String Update(@RequestBody AddressBookDTO newAddress,@PathVariable int id){
        return addressBookServiceLayer.update(newAddress,id);
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteByID(@PathVariable int id){
-        return addressBookServiceLayer.deleteBuyID(id);
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteByID(@PathVariable int id){
+        return ResponseEntity.ok(addressBookServiceLayer.deleteBuyID(id));
     }
 
 

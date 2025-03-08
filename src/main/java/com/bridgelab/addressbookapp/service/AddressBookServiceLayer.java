@@ -4,10 +4,13 @@ import com.bridgelab.addressbookapp.DTO.AddressBookDTO;
 import com.bridgelab.addressbookapp.model.AddressBookDetails;
 import com.bridgelab.addressbookapp.repository.AddressBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -18,10 +21,14 @@ public class AddressBookServiceLayer {
     public List<AddressBookDetails> get(){
         return addressBookRepository.findAll();
     }
-    public String create(AddressBookDTO addressBookDTO){
-        AddressBookDetails addressBookDetails=new AddressBookDetails(addressBookDTO.getName(),addressBookDTO.getDepartment());
+
+    public Map<String, Object> create(AddressBookDTO addressBookDTO){
+        AddressBookDetails addressBookDetails=new AddressBookDetails(0,addressBookDTO.getName(),addressBookDTO.getAddress(),addressBookDTO.getCity(),addressBookDTO.getState(),addressBookDTO.getZipCode(),addressBookDTO.getPhoneNumber());
         addressBookRepository.save(addressBookDetails);
-        return "Created";
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Contact added successfully");
+        response.put("contact", addressBookDetails);
+        return response;
     }
     public Optional<AddressBookDetails> findById(int id){
         Optional<AddressBookDetails>details=addressBookRepository.findById(id);
@@ -36,16 +43,20 @@ public class AddressBookServiceLayer {
         if (addressBookDetails.isPresent()){
             AddressBookDetails addressBookDetail=addressBookDetails.get();
             addressBookDetail.setName(newAddressBookDTO.getName());
-            addressBookDetail.setDepartment(newAddressBookDTO.getDepartment());
+            addressBookDetail.setAddress(newAddressBookDTO.getAddress());
+            addressBookDetail.setCity(newAddressBookDTO.getCity());
+            addressBookDetail.setState(newAddressBookDTO.getState());
+            addressBookDetail.setZipCode(newAddressBookDTO.getZipCode());
+            addressBookDetail.setPhoneNumber(newAddressBookDTO.getPhoneNumber());
             addressBookRepository.save(addressBookDetail);
         }
             return "update done";
-
     }
 
-    public String deleteBuyID(int id){
+    public ResponseEntity<String> deleteBuyID(int id){
          addressBookRepository.deleteById(id);
-         return "Record deleted";
+         return ResponseEntity.ok("recordDeleted");
+
     }
 
 }
